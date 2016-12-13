@@ -4,7 +4,7 @@
   <head>
     <title>FinalGame</title>
     <%= csrf_meta_tags %>
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= stylesheet_link_tag    'application' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8">
@@ -19,6 +19,8 @@
           </div>
         </div>
       </nav>
-      <%= yield %>
+      <div class="text-center">
+        <%= yield %>
+      </div>
     </body>
   </html>
