@@ -1,14 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html>
   <head>
     <title>FinalGame</title>
     <%= csrf_meta_tags %>
-
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-  </head>
-
-  <body>
-    <%= yield %>
-  </body>
-</html>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" charset="utf-8">
+      </script>
+    </head>
+    <body>
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header">
+            <a class="navbar-brand" href="#">CS2610 Final Project</a>
+          </div>
+        </div>
+      </nav>
+      <%= yield %>
+    </body>
+  </html>
