@@ -1,1 +1,16 @@
-<h1>Howdy</h1>
+<table class = "table table-striped">
+<thead>
+   <tr>
+      <th>Name</th>
+      <th>Score</th>
+   </tr>
+</thead>
+<tbody>
+<% @games.each do |game| %>
+  <tr>
+    <td><%= game.name %></td>
+    <td><%= game.score %></td>
+  </tr>
+<% end %>
+</tbody>
+</table>
