@@ -21,13 +21,19 @@ GameObject.prototype.getCurrentPosition = function(){
   };
 }
 
-GameObject.prototype.tick = function(){
-  this.theta += this.velocity;
+GameObject.prototype.isTouching = function(pos){
+  var currentPos = this.getCurrentPosition();
+  var dist = [pos.y - currentPos.y, pos.x - currentPos.x];
+  for(var i = 0; i < dist.length; i++){ dist[i] = dist[i] * dist[i]; }
+  dist[0] = dist[0] + dist[1];
+  var r = Math.sqrt(dist[0]);
+  return (r <= pos.radius + currentPos.radius);
 }
 
-
-function getTouching(obj){
-
+GameObject.prototype.tick = function(obj){
+  this.theta += this.velocity;
+  if(!obj || obj == this){return;}
+  return this.isTouching(obj.getCurrentPosition());
 }
 
 function clearCanvas(){
@@ -54,7 +60,7 @@ function drawObject(object){
 
 function generateRandomObject(centerX, centerY){
   var velocity = Math.random() * 0.1;
-  var radius = Math.random() * 30;
+  var radius = 10 + Math.random() * 20;
   var orbitRadius = Math.random() * 200;
 
   return new GameObject({
@@ -66,6 +72,11 @@ function generateRandomObject(centerX, centerY){
   });
 }
 
+function gameOver(){
+  debugger;
+}
+
+
 
 var centerX = 250, centerY = 250;
 var gameObjects = [];
@@ -74,9 +85,12 @@ for(var i = 0; i < numObjects; i++){
   gameObjects.push(generateRandomObject(centerX, centerY));
 }
 
+var player = generateRandomObject(centerX, centerY);
+gameObjects.push(player);
+
 function updateGame(obj){
   drawObject(obj);
-  obj.tick();
+  if(obj.tick(player)){ gameOver(); }
 }
 
 setInterval(function(){
