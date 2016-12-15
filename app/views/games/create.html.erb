@@ -1,0 +1,73 @@
+<h1>Howdy</h1>
+<canvas id="canvas" width="500" height="500"></canvas>
+
+<script>
+
+// params {velocity, radius = 0, orbitRadius = 1, theta = 0, centerX = 0, centerY = 0}
+function GameObject(params){
+  this.velocity = params.velocity || 1;
+  this.theta = params.theta || 0;
+  this.orbitRadius = params.orbitRadius || 100;
+  this.radius = params.radius || 20;
+  this.centerX = params.centerX || 0;
+  this.centerY = params.centerY || 0;
+}
+
+GameObject.prototype.getCurrentPosition = function(){
+  return {
+    x: this.orbitRadius * Math.cos(this.theta) + this.centerX,
+    y: this.orbitRadius * Math.sin(this.theta) + this.centerY,
+    radius: this.radius
+  };
+}
+
+GameObject.prototype.tick = function(){
+  this.theta += this.velocity;
+}
+
+
+function getTouching(obj){
+
+}
+
+function clearCanvas(){
+  var canvas = document.getElementById('canvas');
+  if (canvas.getContext){
+    var ctx = canvas.getContext('2d');
+    ctx.clearRect(0,0,500,500); // clear canvas
+  }
+}
+
+function drawObject(object){
+  var canvas = document.getElementById('canvas');
+  if (canvas.getContext){
+    var ctx = canvas.getContext('2d');
+    var pos = object.getCurrentPosition();
+
+    console.log(pos);
+
+    ctx.beginPath();
+    ctx.arc(pos.x,pos.y,pos.radius,0,Math.PI*2,true); // Outer circle
+    ctx.fill();
+  }
+}
+
+
+var centerX = 250, centerY = 250;
+
+var a = new GameObject({
+  velocity: 0.05,
+  radius: 20,
+  orbitRadius: 200,
+  centerX,
+  centerY
+});
+
+drawObject(a);
+setInterval(function(){
+  clearCanvas();
+  drawObject(a);
+  a.tick();
+}, 25);
+
+</script>

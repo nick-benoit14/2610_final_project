@@ -11,7 +11,7 @@
 <% @games.each do |game| %>
   <tr>
     <td><%= game.name %></td>
-    <td><%= game.score %></td>
+    <td><%= game.score || "-" %></td>
   </tr>
 <% end %>
 </tbody>
