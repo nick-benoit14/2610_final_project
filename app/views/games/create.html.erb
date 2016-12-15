@@ -52,22 +52,36 @@ function drawObject(object){
   }
 }
 
+function generateRandomObject(centerX, centerY){
+  var velocity = Math.random() * 0.1;
+  var radius = Math.random() * 30;
+  var orbitRadius = Math.random() * 200;
+
+  return new GameObject({
+    velocity,
+    radius,
+    orbitRadius,
+    centerX,
+    centerY
+  });
+}
+
 
 var centerX = 250, centerY = 250;
+var gameObjects = [];
+var numObjects = Math.ceil(Math.random() * 5);
+for(var i = 0; i < numObjects; i++){
+  gameObjects.push(generateRandomObject(centerX, centerY));
+}
 
-var a = new GameObject({
-  velocity: 0.05,
-  radius: 20,
-  orbitRadius: 200,
-  centerX,
-  centerY
-});
+function updateGame(obj){
+  drawObject(obj);
+  obj.tick();
+}
 
-drawObject(a);
 setInterval(function(){
   clearCanvas();
-  drawObject(a);
-  a.tick();
+  gameObjects.forEach(updateGame);
 }, 25);
 
 </script>
