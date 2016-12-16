@@ -1,7 +1,22 @@
-<h1>Howdy</h1>
-<canvas id="canvas" width="500" height="500"></canvas>
+<h1>Green Planet</h1>
+<p>
+  Try to land on the green planet without getting hit by a red meteor, or other
+  orbiting nasties.
+</p>
+<h2>Navigation</h2>
+  <ul>
+    <li>Increase orbital radius: Up arrow</li>
+    <li>Decrease orbital radius: Down arrow</li>
+    <li>Increase clockwise angular velocity: Left arrow</li>
+    <li>Decrase clockwise angular velocity: Right arrow</li>
+  </ul>
+<p>Points are awarded based upon getting closed to the green planet! Click the
+game board to play!</p>
+<canvas id="canvas" style="background-color:#333;" width="500" height="500" onclick="play()"></canvas>
+<!-- <div id="data" data-game="<%= %>"></div> -->
 
 <script>
+var gameId = <%= @game.id %>;
 
 // params {velocity, radius = 0, orbitRadius = 1, theta = 0, centerX = 0, centerY = 0}
 function GameObject(params){
@@ -33,7 +48,7 @@ GameObject.prototype.isTouching = function(pos){
 
 GameObject.prototype.tick = function(obj){
   this.theta += this.velocity;
-  if(this.orbitRadius > 0) {this.orbitRadius -= 0.1;}
+  if(this.orbitRadius > 0) {this.orbitRadius -= 0.001;}
 
   if(!obj || obj == this){return;}
   return this.isTouching(obj.getCurrentPosition());
@@ -77,7 +92,15 @@ function generateRandomObject(centerX, centerY){
 }
 
 function gameOver(player){
-  debugger;
+  var score = 1 / player.orbitRadius;
+
+  var url = "/games/" + gameId + '?score=' + score;
+  var oReq = new XMLHttpRequest();
+  oReq.addEventListener("load", function(){
+    window.location = '/games';
+  });
+  oReq.open("PUT", url);
+  oReq.send({score: score});
 }
 
 function bindKeys(player){
@@ -94,51 +117,51 @@ function bindKeys(player){
 }
 
 
-
-var centerX = 250, centerY = 250;
-var gameObjects = [];
-var numObjects = Math.ceil(Math.random() * 5);
-for(var i = 0; i < numObjects; i++){
+function play(){
+  var centerX = 250, centerY = 250;
+  var gameObjects = [];
+  var numObjects = Math.ceil(Math.random() * 5) + 4;
+  for(var i = 0; i < numObjects; i++){
   gameObjects.push(generateRandomObject(centerX, centerY));
-}
+  }
 
-var planet = new GameObject({
+  var planet = new GameObject({
   velocity: 0,
   radius: 10,
   orbitRadius: 0,
   centerX,
   centerY,
   color:'#00ff00'
-});
-planet.tick = function(){}
-gameObjects.push(planet);
+  });
+  planet.tick = function(){}
+  gameObjects.push(planet);
 
-var player = new GameObject({
+  var player = new GameObject({
   velocity: 0.06,
   radius: 12,
   orbitRadius: 230,
   centerX,
   centerY,
   color:'#0000ff'
-});
+  });
 
-bindKeys(player);
-player.tick = function(){
+  bindKeys(player);
+  player.tick = function(){
   this.theta += this.velocity;
   if(this.orbitRadius - this.radius < 12){return true;}
   if(this.orbitRadius > 0) {this.orbitRadius -= 0.5};
-}
+  }
 
-gameObjects.push(player);
+  gameObjects.push(player);
 
-function updateGame(obj){
+  function updateGame(obj){
   drawObject(obj);
   if(obj.tick(player)){ gameOver(player); }
-}
+  }
 
-setInterval(function(){
+  setInterval(function(){
   clearCanvas();
   gameObjects.forEach(updateGame);
-}, 25);
-
+  }, 25);
+}
 </script>
