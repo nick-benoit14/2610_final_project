@@ -5,13 +5,13 @@
 
 // params {velocity, radius = 0, orbitRadius = 1, theta = 0, centerX = 0, centerY = 0}
 function GameObject(params){
-  this.velocity = params.velocity || 1;
+  this.velocity = params.velocity;
   this.theta = params.theta || 0;
-  this.orbitRadius = params.orbitRadius || 100;
+  this.orbitRadius = params.orbitRadius;
   this.radius = params.radius || 20;
   this.centerX = params.centerX || 0;
   this.centerY = params.centerY || 0;
-  this.color = params.color || '#000';
+  this.color = params.color || '#ff0000';
 }
 
 GameObject.prototype.getCurrentPosition = function(){
@@ -102,19 +102,30 @@ for(var i = 0; i < numObjects; i++){
   gameObjects.push(generateRandomObject(centerX, centerY));
 }
 
+var planet = new GameObject({
+  velocity: 0,
+  radius: 10,
+  orbitRadius: 0,
+  centerX,
+  centerY,
+  color:'#00ff00'
+});
+planet.tick = function(){}
+gameObjects.push(planet);
+
 var player = new GameObject({
   velocity: 0.06,
   radius: 12,
   orbitRadius: 230,
   centerX,
   centerY,
-  color:'#00ff00'
+  color:'#0000ff'
 });
 
 bindKeys(player);
 player.tick = function(){
   this.theta += this.velocity;
-  if(this.orbitRadius - this.radius < 0){return true;}
+  if(this.orbitRadius - this.radius < 12){return true;}
   if(this.orbitRadius > 0) {this.orbitRadius -= 0.5};
 }
 
