@@ -11,6 +11,7 @@ function GameObject(params){
   this.radius = params.radius || 20;
   this.centerX = params.centerX || 0;
   this.centerY = params.centerY || 0;
+  this.color = params.color || '#000';
 }
 
 GameObject.prototype.getCurrentPosition = function(){
@@ -32,6 +33,8 @@ GameObject.prototype.isTouching = function(pos){
 
 GameObject.prototype.tick = function(obj){
   this.theta += this.velocity;
+  if(this.orbitRadius > 0) {this.orbitRadius -= 0.1;}
+
   if(!obj || obj == this){return;}
   return this.isTouching(obj.getCurrentPosition());
 }
@@ -54,13 +57,14 @@ function drawObject(object){
 
     ctx.beginPath();
     ctx.arc(pos.x,pos.y,pos.radius,0,Math.PI*2,true); // Outer circle
+    if(object.color){ ctx.fillStyle = object.color; }
     ctx.fill();
   }
 }
 
 function generateRandomObject(centerX, centerY){
-  var velocity = Math.random() * 0.1;
-  var radius = 10 + Math.random() * 20;
+  var velocity = 0.02 + Math.random() * 0.3;
+  var radius = 5 + Math.random() * 5;
   var orbitRadius = Math.random() * 200;
 
   return new GameObject({
@@ -72,8 +76,21 @@ function generateRandomObject(centerX, centerY){
   });
 }
 
-function gameOver(){
+function gameOver(player){
   debugger;
+}
+
+function bindKeys(player){
+  var changeValOrbitRadius = 5;
+  var changeValVelocity = 0.01;
+  var orbitLimit = 200;
+  var velocityLimit = 0.1;
+  document.onkeydown = function(evt) {
+    if(evt.which == 40){ if(player.orbitRadius > 0) player.orbitRadius -= changeValOrbitRadius; }
+    else if(evt.which == 38){ if(player.orbitRadius < orbitLimit) player.orbitRadius += changeValOrbitRadius; }
+    else if(evt.which == 37){ if(player.velocity > -1 * velocityLimit) player.velocity -= changeValVelocity; }
+    else if(evt.which == 39){ if(player.velocity < velocityLimit) player.velocity += changeValVelocity; }
+  };
 }
 
 
@@ -85,12 +102,27 @@ for(var i = 0; i < numObjects; i++){
   gameObjects.push(generateRandomObject(centerX, centerY));
 }
 
-var player = generateRandomObject(centerX, centerY);
+var player = new GameObject({
+  velocity: 0.06,
+  radius: 12,
+  orbitRadius: 230,
+  centerX,
+  centerY,
+  color:'#00ff00'
+});
+
+bindKeys(player);
+player.tick = function(){
+  this.theta += this.velocity;
+  if(this.orbitRadius - this.radius < 0){return true;}
+  if(this.orbitRadius > 0) {this.orbitRadius -= 0.5};
+}
+
 gameObjects.push(player);
 
 function updateGame(obj){
   drawObject(obj);
-  if(obj.tick(player)){ gameOver(); }
+  if(obj.tick(player)){ gameOver(player); }
 }
 
 setInterval(function(){
