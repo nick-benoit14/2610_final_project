@@ -98,7 +98,7 @@ function gameOver(player){
   var oReq = new XMLHttpRequest();
   oReq.addEventListener("load", function(){
     window.location = '/games';
-    window.alert("Game over!");
+    setTimeout(function(){window.alert("Game over!");}, 200);
   });
   oReq.open("PUT", url);
   oReq.send({score: score});
