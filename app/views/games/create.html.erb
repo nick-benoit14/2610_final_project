@@ -97,6 +97,7 @@ function gameOver(player){
   var url = "/games/" + gameId + '?score=' + score;
   var oReq = new XMLHttpRequest();
   oReq.addEventListener("load", function(){
+    window.alert("Game overx");
     window.location = '/games';
   });
   oReq.open("PUT", url);
@@ -109,6 +110,7 @@ function bindKeys(player){
   var orbitLimit = 200;
   var velocityLimit = 0.1;
   document.onkeydown = function(evt) {
+    evt.preventDefault();
     if(evt.which == 40){ if(player.orbitRadius > 0) player.orbitRadius -= changeValOrbitRadius; }
     else if(evt.which == 38){ if(player.orbitRadius < orbitLimit) player.orbitRadius += changeValOrbitRadius; }
     else if(evt.which == 37){ if(player.velocity > -1 * velocityLimit) player.velocity -= changeValVelocity; }
