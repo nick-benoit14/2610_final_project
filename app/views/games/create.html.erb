@@ -97,8 +97,8 @@ function gameOver(player){
   var url = "/games/" + gameId + '?score=' + score;
   var oReq = new XMLHttpRequest();
   oReq.addEventListener("load", function(){
-    window.alert("Game over!");
     window.location = '/games';
+    window.alert("Game over!");
   });
   oReq.open("PUT", url);
   oReq.send({score: score});
